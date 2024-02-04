@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+
+    <!-- Chart.js -->
+    <script type ="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
+    <script type ="text/javascript" src="js/charts.js"></script>
+    <script type ="text/javascript" src="js/map.js"></script>
+    <script type ="text/javascript" src="js/colorScheme.js"></script>
+    <script type ="text/javascript" src="js/MQTT.js"></script>
+    <link rel="stylesheet" href="map.css">
+
+    <title>Air Quality Map</title>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet'/>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src='https://unpkg.com/mqtt@4.2.8/dist/mqtt.min.js'></script>
+
+  </head>
+  <body style="background-color:#121212;" onload="loadMapGetToken(); setInterval(updateInfo, 400); setInterval(checkPopupOpen, 40); createChart(); setInterval(testData, 400); MQTTStart();">
+      <div id='map'></div>
+      
+      <div id="topBar">
+      <b id="logoText">Air Quality</b> 
+      </div>
+
+      <div id="sideBar">
+        <h4 id="availableSensorsText">Достъпни станции:</h4>
+        <button onclick="updateCoords([23.319941, 42.698334])" id="availableSensorBtn1" type="button" class="button is-info">Centre-1</button>
+        <button onclick="toggleDarkWhiteMode();" id="toggleDarkWhiteBtn" type="button" class="button is-primary is-light">Light Mode</button>
+      </div>
+
+      <div id="infoBar" class="animator">
+        <button id="openModalBtn" class="button is-primary is-light"><h4 id="infoBarText">Качество на въздуха</h4></button>
+        <h4 id="infoBarTextQuality">Качество (ECO2)</h4>
+        <h4 id="infoBarTextQuality2">Качество (TVOC)</h4>
+        <canvas id="eco2Chart" width="400" height="200"></canvas>
+        <canvas id="tvocChart" width="400" height="200"></canvas>
+        <canvas id="temperatureChart" width="400" height="150"></canvas>
+        <canvas id="humidityChart" width="400" height="150"></canvas>
+      </div>
+
+
+<!-- The Modal -->
+<div id="infoModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <center><img src="img/airqualityModal.png" width="500" height="633"></center>
+    <center><img src="img/airqualityModal2.png" width="500" height="633"></center>
+  </div>
+
+</div>
+
+  </body>
+</html>
+
+<!-- MODAL SCRIPT -->
+<script>
+  var modal = document.getElementById("infoModal");
+  var btn = document.getElementById("openModalBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+  
